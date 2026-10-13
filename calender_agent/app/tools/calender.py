@@ -8,12 +8,24 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
     try:
         parsed_date = date.fromisoformat(event_date)
     except ValueError:
-        raise ValueError("Invalid date. Expected YYYY-MM-DD")
+        return {
+            "ok" : False,
+            "error" : {
+                "code" : "VALUE_ERROR",
+                "message" : "Invalid date. Expected YYYY-MM-DD"
+            }
+        }
 
     try:    
         parsed_time = time.fromisoformat(event_time)
     except ValueError:
-        raise ValueError("Invalid time. Expected HH:MM.")
+        return {
+            "ok" : False,
+            "error" : {
+                "code" : "Value_Error",
+                "message" : "Invalid time. Expected HH:MM."
+            }
+        }
 
     
     try:
@@ -29,7 +41,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
         db.refresh(event_object)
 
         return {
-            "status": "success",
+            "ok": True,
             "event": {
                 "id": event_object.id,
                 "title": event_object.title,
@@ -41,7 +53,13 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
 
     except SQLAlchemyError:
         db.rollback()
-        raise
+        return {
+            "ok" : False,
+            "error" : {
+                "code" : "SQLAlchemyError",
+                "message" : "Error from database service"
+            }
+        }
 
 
 def list_calender_event(event_date : str , db : Session):
@@ -49,19 +67,36 @@ def list_calender_event(event_date : str , db : Session):
         parsed_date = date.fromisoformat(event_date)
         response=db.query(Event).filter(Event.event_date==parsed_date).all()
 
-        result=[]
+        event_list=[]
         for ele in response:
             obj={
                 "title" : ele.title,
                 "event_date" : ele.event_date.isoformat(),
                 "event_time" : ele.event_time.isoformat()
             }
-            result.append(obj)
+            event_list.append(obj)
+
+        result={
+            "ok" : True,
+            "events" : event_list
+        }
 
         return result
     
     except ValueError:
-        raise ValueError("Invalid date. Expected YYYY-MM-DD")
+        return {
+            "ok" : False,
+            "error" : {
+                "code" : "VALUE_ERROR",
+                "message" : "Invalid date. Expected YYYY-MM-DD"
+            }
+        }
 
     except SQLAlchemyError:
-        raise
+        return {
+            "ok" : False,
+            "error" : {
+                "code" : "SQLAlchemyError",
+                "message" : "Error from database service"
+            }
+        }
