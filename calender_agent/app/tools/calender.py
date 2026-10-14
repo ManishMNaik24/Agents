@@ -11,7 +11,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
         return {
             "ok" : False,
             "error" : {
-                "code" : "VALUE_ERROR",
+                "code" : "INVALID_DATE",
                 "message" : "Invalid date. Expected YYYY-MM-DD"
             }
         }
@@ -22,7 +22,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
         return {
             "ok" : False,
             "error" : {
-                "code" : "Value_Error",
+                "code" : "INVALID_TIME",
                 "message" : "Invalid time. Expected HH:MM."
             }
         }
@@ -56,7 +56,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
         return {
             "ok" : False,
             "error" : {
-                "code" : "SQLAlchemyError",
+                "code" : "DATABASE_ERROR",
                 "message" : "Error from database service"
             }
         }
@@ -87,7 +87,7 @@ def list_calender_event(event_date : str , db : Session):
         return {
             "ok" : False,
             "error" : {
-                "code" : "VALUE_ERROR",
+                "code" : "INVALID_DATE",
                 "message" : "Invalid date. Expected YYYY-MM-DD"
             }
         }
@@ -96,7 +96,7 @@ def list_calender_event(event_date : str , db : Session):
         return {
             "ok" : False,
             "error" : {
-                "code" : "SQLAlchemyError",
+                "code" : "DATABASE_ERROR",
                 "message" : "Error from database service"
             }
         }
