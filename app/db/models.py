@@ -1,6 +1,6 @@
 from datetime import date, time, datetime
 from sqlalchemy.orm import Mapped, mapped_column
-from app.db.database import Base
+from app.db.session import Base
 
 
 class Event(Base):

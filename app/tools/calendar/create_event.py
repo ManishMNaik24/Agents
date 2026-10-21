@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Session
+from datetime import date, time, datetime
+
 from sqlalchemy.exc import SQLAlchemyError
-from datetime import date, time ,datetime
+from sqlalchemy.orm import Session
+
 from app.db.models import Event
 
 
@@ -16,7 +18,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
             }
         }
 
-    try:    
+    try:
         parsed_time = time.fromisoformat(event_time)
     except ValueError:
         return {
@@ -27,7 +29,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
             }
         }
 
-    
+
     try:
         event_object=Event(
             title=title,
@@ -35,7 +37,7 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
             event_time=parsed_time,
             created_at=datetime.utcnow()
         )
-        
+
         db.add(event_object)
         db.commit()
         db.refresh(event_object)
@@ -53,46 +55,6 @@ def create_calender_event(title : str, event_date : str, event_time : str,db : S
 
     except SQLAlchemyError:
         db.rollback()
-        return {
-            "ok" : False,
-            "error" : {
-                "code" : "DATABASE_ERROR",
-                "message" : "Error from database service"
-            }
-        }
-
-
-def list_calender_event(event_date : str , db : Session):
-    try:
-        parsed_date = date.fromisoformat(event_date)
-        response=db.query(Event).filter(Event.event_date==parsed_date).all()
-
-        event_list=[]
-        for ele in response:
-            obj={
-                "title" : ele.title,
-                "event_date" : ele.event_date.isoformat(),
-                "event_time" : ele.event_time.isoformat()
-            }
-            event_list.append(obj)
-
-        result={
-            "ok" : True,
-            "events" : event_list
-        }
-
-        return result
-    
-    except ValueError:
-        return {
-            "ok" : False,
-            "error" : {
-                "code" : "INVALID_DATE",
-                "message" : "Invalid date. Expected YYYY-MM-DD"
-            }
-        }
-
-    except SQLAlchemyError:
         return {
             "ok" : False,
             "error" : {

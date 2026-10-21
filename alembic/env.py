@@ -24,7 +24,7 @@ try:
 except ImportError:
     pass
 
-from app.db.database import Base
+from app.db.session import Base
 from app.db.models import Event
 
 from logging.config import fileConfig
