@@ -3,7 +3,7 @@ from datetime import date, time, datetime
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.db.models import Event
+from db.models import Event
 
 
 def create_calender_event(title : str, event_date : str, event_time : str,db : Session):

@@ -1,6 +1,6 @@
 import asyncio
 
-from app.db.session import SessionLocal
+from db.session import SessionLocal
 
 
 async def execute_with_retry(tool, tool_args):

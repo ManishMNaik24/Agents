@@ -3,7 +3,7 @@ from datetime import date
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.db.models import Event
+from db.models import Event
 
 
 def list_calender_event(event_date : str , db : Session):

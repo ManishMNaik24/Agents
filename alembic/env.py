@@ -1,10 +1,9 @@
 import os
 import sys
 
-# Ensure `calender_agent/` (parent of alembic/) is on sys.path so
-# `from app.db...` works regardless of the cwd alembic is run from
-# (repo root with `-c calender_agent/alembic.ini` or `calender_agent/` itself).
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+# Ensure `app/` is on sys.path so `from db...` works regardless of the
+# cwd alembic is run from (repo root with `-c alembic.ini` or `app/` itself).
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "app"))
 
 # Load DATABASE_URL from .env so alembic works without manual `export`.
 # .env lives at the repo root; also check calender_agent/ and cwd.
@@ -24,8 +23,8 @@ try:
 except ImportError:
     pass
 
-from app.db.session import Base
-from app.db.models import Event
+from db.session import Base
+from db.models import Event
 
 from logging.config import fileConfig
 
