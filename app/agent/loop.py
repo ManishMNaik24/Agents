@@ -5,13 +5,13 @@ from llm.client import client
 from llm.config import MODEL
 from tools.registry import tool_registery
 from tools.executor import run_tool
+from prompts.system import system_prompt
 
 messages = []
 
 messages.append({
     "role":"system",
-    "content" : "You are a helpful AI assistant and "
-    "your task is to answer questions without hallucinations."
+    "content" : system_prompt
 })
 
 available_tools=[]
@@ -33,18 +33,23 @@ async def agent_loop():
         if user_input.lower() == "exit":
             break
 
-        while True: # tool execution loop
+        iteration=10
+
+        while iteration: # tool execution loop
+            iteration-=1
 
             response=client.chat.completions.create(
                 model=MODEL,
                 messages=messages,
-                tools=available_tools
+                tools=available_tools,
+                temperature=0.4
             )
 
             assistant_response=response.choices[0].message
             # print(assistant_response)
 
             if assistant_response.tool_calls:
+
                 tool_call_list=[]
                 for tool_call in assistant_response.tool_calls:
                     tool_name=tool_call.function.name
@@ -80,6 +85,9 @@ async def agent_loop():
                         "content": json.dumps(result),
                         "tool_call_id": tool_call.id
                     })
+
+                if iteration == 0:
+                    print("LLM >> Maximum agent iterations reached.")
 
             else:
                 print(f"LLM >> {assistant_response.content}")

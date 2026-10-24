@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from db.models import Event
 
 
-def list_calender_event(event_date : str , db : Session):
+async def list_calender_event(event_date : str , db : Session):
     try:
         parsed_date = date.fromisoformat(event_date)
         response=db.query(Event).filter(Event.event_date==parsed_date).all()

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from db.models import Event
 
 
-def create_calender_event(title : str, event_date : str, event_time : str,db : Session):
+async def create_calender_event(title : str, event_date : str, event_time : str,db : Session):
     try:
         parsed_date = date.fromisoformat(event_date)
     except ValueError:
